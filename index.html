@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Reader</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/site.css" />
+    <link rel="icon" href="images/table.svg" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">File Reader</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="index.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="About.html">About</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            <form>
+                <div class="form-group text-center">
+                    <input id='file' type='file' hidden />
+                    <input id='button' type='button' value='Upload CSV/Text File' class="btn btn-outline-info"/>
+                </div>
+            </form>
+            <div class="text-center"><p></p></div>
+            <br />
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-6">
+                    <table class="table table-striped table-bordered .offset-md-4" id="table">
+                        <thead>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+                    <script>
+                        //event listener waits for button to be clicked and then calls openFileExploerer function
+                        var button = document.getElementById('button');
+                        button.addEventListener('click', openFileExplorer);
+        
+                        //this function essentially opens up the file explorer window for the user to select a file
+                        function clearTable() {
+                            $("thead").empty();
+                            $("tbody").empty();
+                        }
+        
+                        function openFileExplorer() {
+                            document.getElementById('file').click();
+                        }
+        
+                        const input = document.querySelector('input[type=file]');
+        
+                        input.addEventListener('change', function (e) {   
+                            if (input) {
+                                var fileName = e.target.files[0].name;
+                                $('p').html(fileName);
+                                console.log(fileName);
+                            }
+        
+                            const reader = new FileReader();
+                           
+                            reader.onload = function () {
+                                const rows = reader.result.split('\n').map(function (row) {
+                                    return row.split(',')
+                                })
+        
+                                //copy data into array
+                                var fileArray = [];
+                                var i;
+                                var j;
+        
+                                //copy over rows of file into fileArray
+                                for (i = 0; rows[i] != null; i++) {
+                                    fileArray[i] = rows[i];
+                                }
+        
+                                clearTable();
+                                var tableHeader = document.getElementById("table").getElementsByTagName('thead')[0];
+                                var tableBody = document.getElementById("table").getElementsByTagName('tbody')[0];
+        
+        
+                                //fill out dynamic table with elements from fileArray
+                                var r;
+                                var c;
+        
+                                //fill out header
+                                for (r = 0; r < 1; r++) {
+                                    var row = tableHeader.insertRow(-1);
+                                    for (c = 0; c < fileArray[r].length; c++) {
+                                        var cell = document.createElement("TH");
+                                        cell.innerHTML = fileArray[r][c];
+                                        row.appendChild(cell);
+                                    }
+                                }
+        
+                                //fill out body
+                                for (r = 1; r < fileArray.length; r++) {
+                                    var row = tableBody.insertRow(-1);
+                                    for (c = 0; c < fileArray[r].length; c++) {
+                                        var cell = row.insertCell(-1);
+                                        cell.innerHTML = fileArray[r][c];
+                                    }
+                                }
+        
+                            }
+        
+                            reader.readAsText(input.files[0]);
+                        }, false)
+        
+                            //var table = "";
+                            //var
+        
+                    </script>
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2020 - CSV Reader - <a href="About.html">About</a>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
