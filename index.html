@@ -60,73 +60,63 @@
                             $("thead").empty();
                             $("tbody").empty();
                         }
-        
+                        
+                        //upon call, function clicks hidden input element
                         function openFileExplorer() {
                             document.getElementById('file').click();
                         }
-        
+                        
+                        //store html input element into variable
                         const input = document.querySelector('input[type=file]');
         
+                        //this function executes when the user select a file
                         input.addEventListener('change', function (e) {   
                             if (input) {
                                 var fileName = e.target.files[0].name;
                                 $('p').html(fileName);
-                                console.log(fileName);
                             }
-        
+                            
                             const reader = new FileReader();
                            
+                            //this function is called when the file is read in by text
                             reader.onload = function () {
+                                //extract lines from file and place them into an array; split rows by newline and columns by comma
                                 const rows = reader.result.split('\n').map(function (row) {
                                     return row.split(',')
                                 })
         
-                                //copy data into array
-                                var fileArray = [];
-                                var i;
-                                var j;
-        
-                                //copy over rows of file into fileArray
-                                for (i = 0; rows[i] != null; i++) {
-                                    fileArray[i] = rows[i];
-                                }
-        
+                                //clear table (incase previous file content is still present)
                                 clearTable();
                                 var tableHeader = document.getElementById("table").getElementsByTagName('thead')[0];
                                 var tableBody = document.getElementById("table").getElementsByTagName('tbody')[0];
         
         
                                 //fill out dynamic table with elements from fileArray
-                                var r;
-                                var c;
+                                var i;
+                                var j;
         
                                 //fill out header
-                                for (r = 0; r < 1; r++) {
+                                for (var i = 0; i < 1; i++) {
                                     var row = tableHeader.insertRow(-1);
-                                    for (c = 0; c < fileArray[r].length; c++) {
+                                    for (j = 0; j < rows[i].length; j++) {
                                         var cell = document.createElement("TH");
-                                        cell.innerHTML = fileArray[r][c];
+                                        cell.innerHTML = rows[i][j];
                                         row.appendChild(cell);
                                     }
                                 }
         
                                 //fill out body
-                                for (r = 1; r < fileArray.length; r++) {
+                                for (i = 1; i < rows.length; i++) {
                                     var row = tableBody.insertRow(-1);
-                                    for (c = 0; c < fileArray[r].length; c++) {
+                                    for (j = 0; j < rows[i].length; j++) {
                                         var cell = row.insertCell(-1);
-                                        cell.innerHTML = fileArray[r][c];
+                                        cell.innerHTML = rows[i][j];
                                     }
-                                }
-        
+                                }      
                             }
-        
+                            //read in the file as text      
                             reader.readAsText(input.files[0]);
-                        }, false)
-        
-                            //var table = "";
-                            //var
-        
+                        }, false)       
                     </script>
         </main>
     </div>
